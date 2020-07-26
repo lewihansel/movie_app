@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Heading, Flex, Text, Button } from "@chakra-ui/core";
-import { MdLocalMovies } from "react-icons/md";
+import { GiFilmStrip } from "react-icons/gi";
 
 // const MenuItems = ({ children }) => (
 //   <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
@@ -19,12 +19,13 @@ const Header = (props) => {
       justify="space-between"
       wrap="wrap"
       padding="1.5rem"
+      pl="6rem"
       bg="teal.500"
       color="white"
       {...props}
     >
-      <Flex align="center" mr={5} direction="row" justify="space-between">
-        <Box as={MdLocalMovies} size="28px" color="white" />
+      <Flex align="center" mr={5} >
+        <Box as={GiFilmStrip} size="30px" color="white" mr=".5rem" />
         <Heading as="h1" size="lg">
           Brown's Movie Lookup
         </Heading>
