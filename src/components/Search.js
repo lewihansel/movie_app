@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import {
-  FormControl,
-  FormLabel,
   Input,
   Flex,
-  Text,
   Button,
 } from "@chakra-ui/core";
 
@@ -27,26 +24,27 @@ const Search = (props) => {
 
   return (
     <Flex align="center" justify="center" my="2rem">
-
-        <Input
-          id="searchmov"
-          placeholder="spiderman"
-          value={searchValue}
-          onChange={handleSearchInputChanges}
-          type="text"
-          focusBorderColor="teal.400"
-        />
-        <Button
-          variantColor="teal"
-          variant="solid"
-          onClick={callSearchFunction}
-          type="submit"
-          mx="0.5rem"
-          px="2rem"
-        >
-          Find Movie!
-        </Button>
-
+      <Input
+        id="searchmov"
+        placeholder="spiderman"
+        value={searchValue}
+        onChange={handleSearchInputChanges}
+        type="text"
+        focusBorderColor="teal.400"
+        maxW="10rem"
+      />
+      <Button
+        variantColor="teal"
+        variant="solid"
+        onClick={callSearchFunction}
+        type="submit"
+        mx="0.5rem"
+        px="2rem"
+        minW="5rem"
+        maxW="7rem"
+      >
+        Find Movie!
+      </Button>
     </Flex>
   );
 };

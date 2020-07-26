@@ -1,12 +1,17 @@
 import React, { useReducer, useEffect } from "react";
 import "../App.css";
-import { ThemeProvider, CSSReset } from "@chakra-ui/core";
+import {
+  ThemeProvider,
+  CSSReset,
+  CircularProgress,
+  Grid,
+  Flex,
+} from "@chakra-ui/core";
 import Header from "./Header";
 import Movie from "./Movie";
-import Search from "./Search";
 import Hero from "./Hero";
 
-const MOVIE_API_URL = "https://www.omdbapi.com/?s=spiderman&apikey=4a3b711b";
+const MOVIE_API_URL = "https://www.omdbapi.com/?s=moon&apikey=d0041439";
 
 const initialState = {
   loading: true,
@@ -42,16 +47,17 @@ const reducer = (state, action) => {
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // useEffect(() => {
-  //   fetch(MOVIE_API_URL)
-  //     .then((response) => response.json())
-  //     .then((jsonResponse) => {
-  //       dispatch({
-  //         type: "SEARCH_MOVIES_SUCCESS",
-  //         payload: jsonResponse.Search,
-  //       });
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetch(MOVIE_API_URL)
+      .then((response) => response.json())
+      .then((jsonResponse) => {
+        dispatch({
+          type: "SEARCH_MOVIES_SUCCESS",
+          payload: jsonResponse.Search,
+        });
+        console.log(jsonResponse);
+      });
+  }, []);
 
   const search = (searchValue) => {
     dispatch({
@@ -80,25 +86,27 @@ function App() {
   return (
     <ThemeProvider>
       <CSSReset />
-      <div className="App">
         <Header />
-        <Hero search={search}/>
-        {/* <Search search={search} /> */}
+        <Hero search={search} />
 
-        <p className="App-intro">Sharing a few of our favourite movies</p>
-
-        <div className="movies">
+        <Flex justify="center">
           {loading && !errorMessage ? (
-            <span>loading... </span>
+            <CircularProgress
+              isIndeterminate
+              color="teal"
+              size="70px"
+            ></CircularProgress>
           ) : errorMessage ? (
             <div className="errorMessage">{errorMessage}</div>
           ) : (
-            movies.map((movie, index) => (
-              <Movie key={`${index}-${movie.Title}`} movie={movie} />
-            ))
+            <Grid templateColumns={{ lg:"repeat(4, 1fr)"  }} gap="1em">
+              {movies.map((movie, index) => (
+                <Movie key={`${index}-${movie.Title}`} movie={movie} />
+              ))}
+            </Grid>
           )}
-        </div>
-      </div>
+        </Flex>
+
     </ThemeProvider>
   );
 }
