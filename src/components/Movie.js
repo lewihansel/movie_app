@@ -51,34 +51,8 @@ const Movie = ({ movie }) => {
         </Box>
 
         <Box>({property.year})</Box>
-
-        {/* <Box d="flex" mt="2" alignItems="center">
-          {Array(5)
-            .fill("")
-            .map((_, i) => (
-              <StarIcon
-                key={i}
-                color={i < property.rating ? "teal.500" : "gray.300"}
-              />
-            ))}
-          <Box as="span" ml="2" color="gray.600" fontSize="sm">
-            {property.reviewCount} reviews
-          </Box>
-        </Box> */}
       </Box>
     </Box>
-
-    // <div className="movie">
-    //   <h2>{movie.Title}</h2>
-    //   <div>
-    //     <img
-    //       width="200"
-    //       alt={`The movie titled: ${movie.Title}`}
-    //       src={poster}
-    //     />
-    //   </div>
-    //   <p>({movie.Year})</p>
-    // </div>
   );
 };
 

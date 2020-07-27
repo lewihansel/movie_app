@@ -8,14 +8,9 @@ const Search = (props) => {
     setSearchValue(e.target.value);
   };
 
-  //   const resetInputField = () => {
-  //     setSearchValue("");
-  //   };
-
   const callSearchFunction = (e) => {
     e.preventDefault();
     props.search(searchValue); //this is the triger function for our movie list component
-    // resetInputField();
   };
 
   return (
@@ -27,7 +22,7 @@ const Search = (props) => {
         onChange={handleSearchInputChanges}
         type="text"
         focusBorderColor="teal.400"
-        maxW="10rem"
+        maxW={{base:"10rem", sm:"30rem"}}
       />
       <Button
         variantColor="teal"
