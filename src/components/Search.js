@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import {
-  Input,
-  Flex,
-  Button,
-} from "@chakra-ui/core";
+import { Input, Flex, Button } from "@chakra-ui/core";
 
 const Search = (props) => {
   const [searchValue, setSearchValue] = useState("");
@@ -18,7 +14,7 @@ const Search = (props) => {
 
   const callSearchFunction = (e) => {
     e.preventDefault();
-    props.search(searchValue);
+    props.search(searchValue); //this is the triger function for our movie list component
     // resetInputField();
   };
 
@@ -26,7 +22,7 @@ const Search = (props) => {
     <Flex align="center" justify="center" my="2rem">
       <Input
         id="searchmov"
-        placeholder="spiderman"
+        placeholder="search by title"
         value={searchValue}
         onChange={handleSearchInputChanges}
         type="text"
