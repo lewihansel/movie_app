@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Heading, Flex, Text } from "@chakra-ui/core";
+import { Box, Flex, Text } from "@chakra-ui/core";
 import { MdCopyright } from "react-icons/md";
 
 const Footer = (props) => {
