@@ -11,6 +11,9 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Badge,
+  Text,
+  Icon,
 } from "@chakra-ui/core";
 
 const DEFAULT_PLACEHOLDER_IMAGE =
@@ -50,6 +53,8 @@ const Movie = ({ movie, imdb }) => {
       });
   };
 
+  const { Plot, Rated, Runtime, imdbRating, imdbVotes, Year } = movieDetails;
+
   return (
     <Box borderWidth="1px" rounded="lg" overflow="hidden" width="300px">
       <Image src={property.imageUrl} alt={property.imageAlt} height="450px" />
@@ -78,11 +83,40 @@ const Movie = ({ movie, imdb }) => {
             Details
           </Button>
 
-          <Modal isOpen={isOpen} onClose={onClose} >
+          <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent maxW={{ lg:"40%", md:"60%", base:"90%"}}>
-              <ModalHeader>{property.title}</ModalHeader>
+            <ModalContent maxW={{ lg: "40%", md: "60%", base: "90%" }}>
+              <ModalHeader>
+                <Box>
+                  <Flex>
+                    <Text as="h1">
+                      {property.title}{" "}
+                      <Badge px="2" variant="subtle">
+                        Rated : {Rated}
+                      </Badge>
+                    </Text>
+                  </Flex>
+
+                  <Box d="flex" mt="2" alignItems="center">
+                    {Array(10)
+                      .fill("")
+                      .map((_, i) => (
+                        <Icon
+                          name="star"
+                          size="11px" 
+                          key={i}
+                          color={i < imdbRating ? "teal.500" : "gray.300"}
+                        />
+                      ))}
+                    <Box as="span" ml="2" color="gray.600" fontSize="sm">
+                      {imdbVotes} reviews
+                    </Box>
+                  </Box>
+                </Box>
+              </ModalHeader>
+
               <ModalCloseButton />
+
               <Image
                 src={property.imageUrl}
                 alt={property.imageAlt}
@@ -95,7 +129,8 @@ const Movie = ({ movie, imdb }) => {
                 overflowY="auto"
                 maxH={{ md: "600px", base: "250px" }}
               >
-                {movieDetails.Plot}
+                {Plot} <br /><br />
+                Published: {Year}, Duration : {Runtime}
               </ModalBody>
             </ModalContent>
           </Modal>

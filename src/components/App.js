@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from "react";
-import "../App.css";
+import "./App.css";
 import {
   ThemeProvider,
   CSSReset,
@@ -16,7 +16,7 @@ import Movie from "./Movie";
 import Hero from "./Hero";
 import Footer from "./Footer";
 
-const MOVIE_API_URL = `https://www.omdbapi.com/?s=moon&apikey=${process.env.REACT_APP_OMDB_API_KEY}`;
+const MOVIE_API_URL = `https://www.omdbapi.com/?s=mission&apikey=${process.env.REACT_APP_OMDB_API_KEY}`;
 
 const initialState = {
   loading: true,
@@ -80,7 +80,6 @@ function App() {
           type: "SEARCH_MOVIES_SUCCESS",
           payload: jsonResponse,
         });
-        console.log(jsonResponse);
       });
   }, []);
 
