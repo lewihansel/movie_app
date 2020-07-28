@@ -8,10 +8,13 @@ import {
   Flex,
   Button,
   Text,
+  Box,
 } from "@chakra-ui/core";
+
 import Header from "./Header";
 import Movie from "./Movie";
 import Hero from "./Hero";
+import Footer from "./Footer";
 
 const MOVIE_API_URL = `https://www.omdbapi.com/?s=moon&apikey=${process.env.REACT_APP_OMDB_API_KEY}`;
 
@@ -75,7 +78,7 @@ function App() {
       .then((jsonResponse) => {
         dispatch({
           type: "SEARCH_MOVIES_SUCCESS",
-          payload: jsonResponse
+          payload: jsonResponse,
         });
         console.log(jsonResponse);
       });
@@ -173,11 +176,13 @@ function App() {
 
       <Flex justify="center" align="center">
         {loading && !errorMessage ? (
-          <CircularProgress
-            isIndeterminate
-            color="teal"
-            size="70px"
-          ></CircularProgress>
+          <Box height="350px">
+            <CircularProgress
+              isIndeterminate
+              color="teal"
+              size="70px"
+            ></CircularProgress>
+          </Box>
         ) : errorMessage ? (
           <div className="errorMessage">{errorMessage}</div>
         ) : (
@@ -190,38 +195,49 @@ function App() {
             gap={{ base: "1em", lg: "2em" }}
           >
             {movies.map((movie, index) => (
-              <Movie key={`${index}-${movie.Title}`} movie={movie} />
+              <Movie
+                key={`${index}-${movie.Title}`}
+                movie={movie}
+                imdb={movie.imdbID}
+              />
             ))}
 
             <Flex flexDir="column" justify="center" align="center">
               <Grid mb="1em" justifyItems="center">
                 <Text>Page</Text>
                 <Text fontSize="64px">{state.page}</Text>
-                <Text>of {state.totalRes/10}</Text>
+                <Text>of {Math.ceil(state.totalRes / 10)}</Text>
               </Grid>
-              <Button
-                rightIcon="arrow-forward"
-                variantColor="teal"
-                variant="outline"
-                onClick={callNextPage}
-                width="200px"
-              >
-                Next Page
-              </Button>
 
-              <Button
-                rightIcon="arrow-forward"
-                variantColor="teal"
-                variant="outline"
-                onClick={callPrevPage}
-                width="200px"
-              >
-                Previous Page
-              </Button>
+              {state.page === Math.ceil(state.totalRes / 10) ? null : (
+                <Button
+                  rightIcon="arrow-forward"
+                  variantColor="teal"
+                  variant="outline"
+                  onClick={callNextPage}
+                  width="200px"
+                >
+                  Next Page
+                </Button>
+              )}
+
+              {state.page === 1 ? null : (
+                <Button
+                  leftIcon="arrow-back"
+                  variantColor="teal"
+                  variant="outline"
+                  onClick={callPrevPage}
+                  width="200px"
+                >
+                  Previous Page
+                </Button>
+              )}
             </Flex>
           </Grid>
         )}
       </Flex>
+
+      <Footer />
     </ThemeProvider>
   );
 }
