@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Heading, Flex } from "@chakra-ui/core";
+import { Box, Heading, Flex,} from "@chakra-ui/core";
 import { GiFilmStrip } from "react-icons/gi";
 
 const Header = (props) => {

@@ -1,18 +1,12 @@
 import React, { useReducer, useEffect } from "react";
-import "./App.css";
 import {
   ThemeProvider,
+  ColorModeProvider,
   CSSReset,
-  CircularProgress,
-  Grid,
-  Flex,
-  Button,
-  Text,
-  Box,
 } from "@chakra-ui/core";
 
 import Header from "./Header";
-import Movie from "./Movie";
+import Body from "./Body";
 import Hero from "./Hero";
 import Footer from "./Footer";
 
@@ -80,6 +74,7 @@ function App() {
           type: "SEARCH_MOVIES_SUCCESS",
           payload: jsonResponse,
         });
+        console.log(jsonResponse);
       });
   }, []);
 
@@ -165,78 +160,27 @@ function App() {
       });
   };
 
-  const { movies, errorMessage, loading } = state;
+  const { movies, errorMessage, loading, page, totalRes } = state;
 
   return (
     <ThemeProvider>
-      <CSSReset />
-      <Header />
-      <Hero search={search} />
+      <ColorModeProvider>
+        <CSSReset />
+        <Header />
+        <Hero search={search} loading={loading} />
 
-      <Flex justify="center" align="center">
-        {loading && !errorMessage ? (
-          <Box height="350px">
-            <CircularProgress
-              isIndeterminate
-              color="teal"
-              size="70px"
-            ></CircularProgress>
-          </Box>
-        ) : errorMessage ? (
-          <div className="errorMessage">{errorMessage}</div>
-        ) : (
-          <Grid
-            templateColumns={{
-              xl: "repeat(4, 1fr)",
-              lg: "repeat(3, 1fr)",
-              md: "repeat(2, 1fr)",
-            }}
-            gap={{ base: "1em", lg: "2em" }}
-          >
-            {movies.map((movie, index) => (
-              <Movie
-                key={`${index}-${movie.Title}`}
-                movie={movie}
-                imdb={movie.imdbID}
-              />
-            ))}
+        <Body
+          loading={loading}
+          errorMessage={errorMessage}
+          movies={movies}
+          page={page}
+          totalRes={totalRes}
+          callNextPage={callNextPage}
+          callPrevPage={callPrevPage}
+        />
 
-            <Flex flexDir="column" justify="center" align="center">
-              <Grid mb="1em" justifyItems="center">
-                <Text>Page</Text>
-                <Text fontSize="64px">{state.page}</Text>
-                <Text>of {Math.ceil(state.totalRes / 10)}</Text>
-              </Grid>
-
-              {state.page === Math.ceil(state.totalRes / 10) ? null : (
-                <Button
-                  rightIcon="arrow-forward"
-                  variantColor="teal"
-                  variant="outline"
-                  onClick={callNextPage}
-                  width="200px"
-                >
-                  Next Page
-                </Button>
-              )}
-
-              {state.page === 1 ? null : (
-                <Button
-                  leftIcon="arrow-back"
-                  variantColor="teal"
-                  variant="outline"
-                  onClick={callPrevPage}
-                  width="200px"
-                >
-                  Previous Page
-                </Button>
-              )}
-            </Flex>
-          </Grid>
-        )}
-      </Flex>
-
-      <Footer />
+        <Footer />
+      </ColorModeProvider>
     </ThemeProvider>
   );
 }

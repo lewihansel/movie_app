@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Input, Flex, Button } from "@chakra-ui/core";
 
-const Search = (props) => {
+const Search = ({search, loading}) => {
   const [searchValue, setSearchValue] = useState("");
 
   const handleSearchInputChanges = (e) => {
@@ -10,7 +10,13 @@ const Search = (props) => {
 
   const callSearchFunction = (e) => {
     e.preventDefault();
-    props.search(searchValue); //this is the triger function for our movie list component
+    search(searchValue); //this is the triger function for our movie list component
+  };
+
+  const onKeyUp = (e) => {
+    if (e.key === "Enter") {
+      search(searchValue);
+    }
   };
 
   return (
@@ -20,14 +26,17 @@ const Search = (props) => {
         placeholder="search by title"
         value={searchValue}
         onChange={handleSearchInputChanges}
+        onKeyPress={onKeyUp}
         type="text"
         focusBorderColor="teal.400"
-        maxW={{base:"10rem", sm:"30rem"}}
+        maxW={{ base: "10rem", sm: "30rem" }}
       />
       <Button
         variantColor="teal"
         variant="solid"
         onClick={callSearchFunction}
+        isLoading={loading}
+        loadingText="searching"
         type="submit"
         mx="0.5rem"
         px="2rem"
