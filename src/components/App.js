@@ -183,7 +183,6 @@ function App() {
         <Hero search={search} loading={loading} />
 
         {collection.length ? <MovieCollection collection={collection} /> : null}
-        {console.log(collection)}
         <Body
           loading={loading}
           errorMessage={errorMessage}
