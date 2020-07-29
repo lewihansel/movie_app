@@ -1,24 +1,21 @@
-import React, { useReducer, useEffect } from "react";
-import {
-  ThemeProvider,
-  ColorModeProvider,
-  CSSReset,
-} from "@chakra-ui/core";
+import React, { useReducer, useEffect, useState } from "react";
+import { ThemeProvider, ColorModeProvider, CSSReset } from "@chakra-ui/core";
 
 import Header from "./Header";
+import MovieCollection from "./MovieCollection";
 import Body from "./Body";
 import Hero from "./Hero";
 import Footer from "./Footer";
 
-const MOVIE_API_URL = `https://www.omdbapi.com/?s=mission&apikey=${process.env.REACT_APP_OMDB_API_KEY}`;
+const MOVIE_API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&sort_by=popularity.desc&include_video=false&include_video=false&page=1`;
 
 const initialState = {
   loading: true,
   movies: [],
   errorMessage: null,
   page: 1,
-  searchValue: "moon",
-  totalRes: 0,
+  searchValue: "",
+  totalPages: 0,
 };
 
 const reducer = (state, action) => {
@@ -49,14 +46,14 @@ const reducer = (state, action) => {
       return {
         ...state,
         loading: false,
-        movies: action.payload.Search,
-        totalRes: action.payload.totalResults,
+        movies: action.payload.results,
+        totalPages: action.payload.total_pages,
       };
     case "SEARCH_MOVIES_FAILURE":
       return {
         ...state,
         loading: false,
-        errorMessage: action.error,
+        errorMessage: action.payload.status_message,
       };
     default:
       return state;
@@ -65,6 +62,7 @@ const reducer = (state, action) => {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [collection, setCollection] = useState([]);
 
   useEffect(() => {
     fetch(MOVIE_API_URL)
@@ -74,7 +72,7 @@ function App() {
           type: "SEARCH_MOVIES_SUCCESS",
           payload: jsonResponse,
         });
-        console.log(jsonResponse);
+        // console.log(jsonResponse);
       });
   }, []);
 
@@ -85,21 +83,22 @@ function App() {
     });
 
     fetch(
-      `https://www.omdbapi.com/?s=${searchValue}&page=${state.page}&apikey=${process.env.REACT_APP_OMDB_API_KEY}`
+      `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_TMDB_API_KEY}&query=${searchValue}&page=${state.page}&include_adult=false`
     )
       .then((response) => response.json())
       .then((jsonResponse) => {
-        if (jsonResponse.Response === "True") {
+        if (jsonResponse) {
           dispatch({
             type: "SEARCH_MOVIES_SUCCESS",
             payload: jsonResponse,
           });
-          // console.log(jsonResponse);
+          console.log(jsonResponse);
         } else {
           dispatch({
             type: "SEARCH_MOVIES_FAILURE",
-            error: jsonResponse.Error,
+            payload: jsonResponse,
           });
+          console.log(jsonResponse.status_message);
         }
       });
   };
@@ -110,24 +109,31 @@ function App() {
       type: "NEXT_PAGE",
     });
 
-    fetch(
-      `https://www.omdbapi.com/?s=${state.searchValue}&page=${
-        state.page + 1
-      }&apikey=${process.env.REACT_APP_OMDB_API_KEY}`
-    )
+    const url = state.searchValue
+      ? `https://api.themoviedb.org/3/search/movie?api_key=${
+          process.env.REACT_APP_TMDB_API_KEY
+        }&query=${state.searchValue}&page=${state.page + 1}&include_adult=false`
+      : `https://api.themoviedb.org/3/discover/movie?api_key=${
+          process.env.REACT_APP_TMDB_API_KEY
+        }&language=en-US&sort_by=popularity.desc&include_video=false&include_video=false&page=${
+          state.page + 1
+        }`;
+
+    fetch(url)
       .then((response) => response.json())
       .then((jsonResponse) => {
-        if (jsonResponse.Response === "True") {
+        if (jsonResponse) {
           dispatch({
             type: "SEARCH_MOVIES_SUCCESS",
             payload: jsonResponse,
           });
-          console.log(jsonResponse, state);
+          // console.log(jsonResponse, state);
         } else {
           dispatch({
             type: "SEARCH_MOVIES_FAILURE",
-            error: jsonResponse.Error,
+            payload: jsonResponse,
           });
+          console.log(jsonResponse.status_message);
         }
       });
   };
@@ -138,14 +144,20 @@ function App() {
       type: "PREV_PAGE",
     });
 
-    fetch(
-      `https://www.omdbapi.com/?s=${state.searchValue}&page=${
-        state.page - 1
-      }&apikey=${process.env.REACT_APP_OMDB_API_KEY}`
-    )
+    const url = state.searchValue
+      ? `https://api.themoviedb.org/3/search/movie?api_key=${
+          process.env.REACT_APP_TMDB_API_KEY
+        }&query=${state.searchValue}&page=${state.page - 1}&include_adult=false`
+      : `https://api.themoviedb.org/3/discover/movie?api_key=${
+          process.env.REACT_APP_TMDB_API_KEY
+        }&language=en-US&sort_by=popularity.desc&include_video=false&include_video=false&page=${
+          state.page - 1
+        }`;
+
+    fetch(url)
       .then((response) => response.json())
       .then((jsonResponse) => {
-        if (jsonResponse.Response === "True") {
+        if (jsonResponse) {
           dispatch({
             type: "SEARCH_MOVIES_SUCCESS",
             payload: jsonResponse,
@@ -154,13 +166,14 @@ function App() {
         } else {
           dispatch({
             type: "SEARCH_MOVIES_FAILURE",
-            error: jsonResponse.Error,
+            payload: jsonResponse,
           });
+          console.log(jsonResponse.status_message);
         }
       });
   };
 
-  const { movies, errorMessage, loading, page, totalRes } = state;
+  const { movies, errorMessage, loading, page, totalPages } = state;
 
   return (
     <ThemeProvider>
@@ -169,14 +182,18 @@ function App() {
         <Header />
         <Hero search={search} loading={loading} />
 
+        {collection.length ? <MovieCollection collection={collection} /> : null}
+        {console.log(collection)}
         <Body
           loading={loading}
           errorMessage={errorMessage}
           movies={movies}
           page={page}
-          totalRes={totalRes}
+          totalPages={totalPages}
           callNextPage={callNextPage}
           callPrevPage={callPrevPage}
+          setCollection={setCollection}
+          collection={collection}
         />
 
         <Footer />

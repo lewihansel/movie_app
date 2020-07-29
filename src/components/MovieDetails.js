@@ -16,33 +16,42 @@ import {
   Button,
 } from "@chakra-ui/core";
 
-const MovieDetails = ({ imdb, imageAlt, imageUrl }) => {
+const MovieDetails = ({ movie, imageAlt, imageUrl }) => {
   const [movieDetails, setMovieDetails] = useState("");
   const [loading, setLoading] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleDetailFetch = () => {
     setLoading(true);
     fetch(
-      `https://www.omdbapi.com/?i=${imdb}&plot=full&apikey=${process.env.REACT_APP_OMDB_API_KEY}`
+      `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US`
     )
       .then((response) => response.json())
       .then((jsonResponse) => {
-        if (jsonResponse.Response) {
+        if (jsonResponse) {
           setMovieDetails(jsonResponse);
           setLoading(false);
           onOpen();
-          console.log(jsonResponse);
         } else {
           setLoading(false);
           console.log(jsonResponse);
         }
       });
   };
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { Plot, Rated, Runtime, imdbRating, imdbVotes, Year, Title } = movieDetails;
+
+  const {
+    overview,
+    status,
+    runtime,
+    vote_average,
+    vote_count,
+    release_date,
+    title,
+  } = movieDetails;
   return (
     <>
       <Button
+        size="sm"
         onClick={handleDetailFetch}
         isLoading={loading}
         loadingText="searching"
@@ -58,9 +67,9 @@ const MovieDetails = ({ imdb, imageAlt, imageUrl }) => {
             <Box>
               <Flex>
                 <Text as="h1">
-                  {Title}{" "}
+                  {title}{" "}
                   <Badge px="2" variant="subtle">
-                    Rated : {Rated}
+                    {status}
                   </Badge>
                 </Text>
               </Flex>
@@ -73,11 +82,11 @@ const MovieDetails = ({ imdb, imageAlt, imageUrl }) => {
                       name="star"
                       size="11px"
                       key={i}
-                      color={i < imdbRating ? "teal.500" : "gray.300"}
+                      color={i < vote_average ? "teal.500" : "gray.300"}
                     />
                   ))}
                 <Box as="span" ml="2" color="gray.600" fontSize="sm">
-                  {imdbVotes} reviews
+                  {vote_count} vote
                 </Box>
               </Box>
             </Box>
@@ -97,9 +106,9 @@ const MovieDetails = ({ imdb, imageAlt, imageUrl }) => {
             overflowY="auto"
             maxH={{ md: "600px", base: "250px" }}
           >
-            {Plot} <br />
+            {overview} <br />
             <br />
-            Published: {Year}, Duration : {Runtime}
+            Published: {release_date}, Duration : {runtime}
           </ModalBody>
         </ModalContent>
       </Modal>

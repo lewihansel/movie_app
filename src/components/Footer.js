@@ -1,28 +1,30 @@
 import React from "react";
-import { Box, Flex, Text } from "@chakra-ui/core";
-import { MdCopyright } from "react-icons/md";
+import { Link, Flex, Text, Image } from "@chakra-ui/core";
 
 const Footer = (props) => {
   return (
     <Flex
       as="footer"
       align="center"
-      justify={{ md: "space-between", base: "center" }}
+      justify={{ md: "flex-end", base: "center" }}
       wrap="wrap"
       padding="1.5rem"
-      pl={{ md: "6rem", base: "0px" }}
+      px={{ md: "6rem", base: "0px" }}
       bg="teal.500"
       color="white"
       mt="10em"
       {...props}
     >
-      <Box>
-        <Flex align="start">
-          <Text as="p">Movie content taken from OMDB</Text>
-          <Box as={MdCopyright} size="12px" color="white" />
-          <Text as="p"> API</Text>
-        </Flex>
-      </Box>
+      <Flex>
+        <Text mr="0.5em">Movie content from :</Text>
+        <Link href="https://www.themoviedb.org/" target="_blank">
+          <Image
+            height="30px"
+            src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3fec72548ebc1fea3fbbd1ad9e36364db38b.svg"
+            alt="TMDB official logo"
+          />
+        </Link>
+      </Flex>
     </Flex>
   );
 };

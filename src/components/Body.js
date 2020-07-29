@@ -14,9 +14,11 @@ const Body = ({
   errorMessage,
   movies,
   page,
-  totalRes,
+  totalPages,
   callNextPage,
   callPrevPage,
+  setCollection,
+  collection,
 }) => {
   return (
     <Flex justify="center" align="center">
@@ -29,9 +31,7 @@ const Body = ({
           ></CircularProgress>
         </Box>
       ) : errorMessage ? (
-        <Box height="255px">
-          {errorMessage}
-        </Box>
+        <Box height="255px">{errorMessage}</Box>
       ) : (
         <Grid
           templateColumns={{
@@ -41,11 +41,12 @@ const Body = ({
           }}
           gap={{ base: "1em", lg: "2em" }}
         >
-          {movies.map((movie, index) => (
+          {movies.map((movie) => (
             <Movie
-              key={`${index}-${movie.Title}`}
+              key={movie.id}
               movie={movie}
-              imdb={movie.imdbID}
+              setCollection={setCollection}
+              collection={collection}
             />
           ))}
 
@@ -53,10 +54,10 @@ const Body = ({
             <Grid mb="1em" justifyItems="center">
               <Text>Page</Text>
               <Text fontSize="64px">{page}</Text>
-              <Text>of {Math.ceil(totalRes / 10)}</Text>
+              <Text>of {totalPages}</Text>
             </Grid>
 
-            {page === Math.ceil(totalRes / 10) ? null : (
+            {page === totalPages ? null : (
               <Button
                 rightIcon="arrow-forward"
                 variantColor="teal"
