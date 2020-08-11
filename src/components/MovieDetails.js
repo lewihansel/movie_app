@@ -108,7 +108,7 @@ const MovieDetails = ({ movie, imageAlt, imageUrl }) => {
           >
             {overview} <br />
             <br />
-            Published: {release_date}, Duration : {runtime}
+            Published: {release_date}, Duration : {runtime} minutes
           </ModalBody>
         </ModalContent>
       </Modal>

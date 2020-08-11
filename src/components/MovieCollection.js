@@ -12,6 +12,9 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverFooter,
+  Image,
+  Text,
+  Box,
 } from "@chakra-ui/core";
 
 const MovieCollection = ({ collection }) => {
@@ -30,14 +33,31 @@ const MovieCollection = ({ collection }) => {
         <PopoverTrigger>
           <Button>My Collection</Button>
         </PopoverTrigger>
-        <PopoverContent zIndex={4}>
+        <PopoverContent zIndex={4} width="1000px">
           <PopoverArrow />
           <PopoverCloseButton />
           <PopoverHeader>Yout movie collection!</PopoverHeader>
           <PopoverBody overflow="auto">
-            <List styleType="disc">
+            <List styleType="none">
               {collection.map((item) => (
-                <ListItem key={item.id}>{item.title}</ListItem>
+                <ListItem key={item.id}>
+                  <Flex alignItems="flex-start">
+                    <Image
+                      src={`https://image.tmdb.org/t/p/w200/${item.poster_path}`}
+                      alt={`poster of a movie called "${item.title}"`}
+                      objectFit="contain"
+                      mb="1rem"
+                      mt="0.5rem"
+                      mr="0.5rem"
+                      height={{ md: "200", base: "200px" }}
+                    />
+                    <Box>
+                      <Text fontWeight="600">{item.title}</Text>
+                      <Text>{item.release_date.slice(0, 4)}</Text>
+                      <Text>{item.overview}</Text>
+                    </Box>
+                  </Flex>
+                </ListItem>
               ))}
             </List>
           </PopoverBody>

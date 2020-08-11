@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect, useState } from "react";
-import { ThemeProvider, ColorModeProvider, CSSReset } from "@chakra-ui/core";
+import { ThemeProvider, CSSReset } from "@chakra-ui/core";
 
 import Header from "./Header";
 import MovieCollection from "./MovieCollection";
@@ -172,31 +172,28 @@ function App() {
         }
       });
   };
-
   const { movies, errorMessage, loading, page, totalPages } = state;
 
   return (
     <ThemeProvider>
-      <ColorModeProvider>
-        <CSSReset />
-        <Header />
-        <Hero search={search} loading={loading} />
+      <CSSReset />
+      <Header />
+      <Hero search={search} loading={loading} />
 
-        {collection.length ? <MovieCollection collection={collection} /> : null}
-        <Body
-          loading={loading}
-          errorMessage={errorMessage}
-          movies={movies}
-          page={page}
-          totalPages={totalPages}
-          callNextPage={callNextPage}
-          callPrevPage={callPrevPage}
-          setCollection={setCollection}
-          collection={collection}
-        />
+      {collection.length && <MovieCollection collection={collection} />}
+      <Body
+        loading={loading}
+        errorMessage={errorMessage}
+        movies={movies}
+        page={page}
+        totalPages={totalPages}
+        callNextPage={callNextPage}
+        callPrevPage={callPrevPage}
+        setCollection={setCollection}
+        collection={collection}
+      />
 
-        <Footer />
-      </ColorModeProvider>
+      <Footer />
     </ThemeProvider>
   );
 }

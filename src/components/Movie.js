@@ -17,11 +17,12 @@ const Movie = ({ movie, setCollection, collection }) => {
     year: movie.release_date,
   };
 
-  const [disabled, setDisabled] = useState(false)
+  const [disabled, setDisabled] = useState(false);
 
   const addToCollection = () => {
     setCollection([...collection, movie]);
-    setDisabled(true)
+    setDisabled(true);
+    console.log(collection);
   };
 
   const { imageUrl, imageAlt } = property;
