@@ -180,7 +180,7 @@ function App() {
       <Header />
       <Hero search={search} loading={loading} />
 
-      {collection.length && <MovieCollection collection={collection} />}
+      {collection.length > 0 && <MovieCollection collection={collection} />}
       <Body
         loading={loading}
         errorMessage={errorMessage}
